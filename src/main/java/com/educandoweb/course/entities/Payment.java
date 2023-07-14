@@ -1,10 +1,10 @@
 package com.educandoweb.course.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
@@ -15,12 +15,14 @@ public class Payment implements Serializable {
     private Long id;
     private Instant moment;
 
+    @JsonIgnore
     @OneToOne
     @MapsId
     private Order order;
 
     public Payment() {
     }
+
     public Payment(Long id, Instant moment, Order order) {
         this.id = id;
         this.moment = moment;
@@ -44,8 +46,13 @@ public class Payment implements Serializable {
         this.moment = moment;
     }
 
+
     public Order getOrder() {
         return order;
+    }
+
+    public void setOrder(Order order) {
+        this.order = order;
     }
 
     @Override
@@ -59,9 +66,5 @@ public class Payment implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(getId());
-    }
-
-    public void setOrder(Order order) {
-        this.order = order;
     }
 }

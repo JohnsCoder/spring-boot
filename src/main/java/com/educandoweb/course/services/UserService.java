@@ -2,8 +2,11 @@ package com.educandoweb.course.services;
 
 import com.educandoweb.course.entities.User;
 import com.educandoweb.course.repositories.UserRepository;
+import com.educandoweb.course.services.exceptions.DatabaseException;
 import com.educandoweb.course.services.exceptions.ResourceNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,14 +32,27 @@ public class UserService {
     }
 
     public void deleteById(Long id) {
-        userRepository.deleteById(id);
+        if (!userRepository.existsById(id)) {
+            throw new ResourceNotFoundException(id);
+        }
+        try {
+
+            userRepository.deleteById(id);
+        } catch (DataIntegrityViolationException err) {
+            throw new DatabaseException(err.getMessage());
+        }
     }
 
     public User update(Long id, User user) {
-        User entity = userRepository.getReferenceById(id);
-        updateData(entity, user);
+        try {
+            User entity = userRepository.getReferenceById(id);
+            updateData(entity, user);
+            return userRepository.save(entity);
+        } catch (RuntimeException err) {
+            err.printStackTrace();
+            throw new ResourceNotFoundException(err.getMessage());
+        }
 
-        return userRepository.save(entity);
     }
 
     private void updateData(User entity, User user) {

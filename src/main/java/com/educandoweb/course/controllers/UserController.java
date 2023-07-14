@@ -3,7 +3,7 @@ package com.educandoweb.course.controllers;
 import com.educandoweb.course.entities.User;
 import com.educandoweb.course.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,9 +32,10 @@ public class UserController {
         return userService.insert(user);
     }
 
-    @DeleteMapping
-    public void deleteById(@RequestParam(value = "id") Long id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteById(@PathVariable Long id) {
         userService.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{id}")

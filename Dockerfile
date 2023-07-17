@@ -1,6 +1,6 @@
+FROM ubuntu:latest AS build
 RUN echo $DATABASE_URL
 
-FROM ubuntu:latest AS build
 
 RUN apt-get update
 RUN apt-get install openjdk-17-jdk -y

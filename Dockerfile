@@ -1,12 +1,13 @@
+RUN echo $DATABASE_URL
+
 FROM ubuntu:latest AS build
 
 RUN apt-get update
 RUN apt-get install openjdk-17-jdk -y
+
 COPY . .
 
-RUN export JAVA_HOME=/opt/openjdk11
-
-RUN ./mvnw package
+RUN chmod +x ./mvnw package
 
 FROM openjdk:17-jdk-slim
 
